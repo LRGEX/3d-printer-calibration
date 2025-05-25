@@ -89,12 +89,10 @@ def calibrate_axis_rotation_distance():
 
     current_x = float(input("Enter current rotation_distance for X: "))
     current_y = float(input("Enter current rotation_distance for Y: "))
-    current_z = float(input("Enter current rotation_distance for Z: "))
-
-    # ✅ FIXED FORMULA to ensure correct results
-    new_x = current_x * (measured_x / expected_x)
-    new_y = current_y * (measured_y / expected_y)
-    new_z = current_z * (measured_z / expected_z)
+    current_z = float(input("Enter current rotation_distance for Z: "))    # ✅ FIXED FORMULA to ensure correct results (corrected the inversion)
+    new_x = current_x * (expected_x / measured_x)
+    new_y = current_y * (expected_y / measured_y)
+    new_z = current_z * (expected_z / measured_z)
     time.sleep(1)
     print(f"\n{Fore.GREEN}=== New Rotation Distance Values (Corrected) ==={Style.RESET_ALL}\n")
     time.sleep(1)
