@@ -18,3 +18,6 @@ dimcal_history.json
 
 # Agent instructions (private)
 CLAUDE.md
+
+# Build logs
+build_log.txt
