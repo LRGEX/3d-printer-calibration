@@ -120,12 +120,13 @@ def calibrate_esteps():
     old_esteps = get_float_input("   Enter current E-steps value: ", min_value=MIN_ESTEPS, max_value=MAX_ESTEPS)
     
     print(f"\n{Fore.BLUE}Step 2/5:{Style.RESET_ALL} Set extrusion amount")
-    expected_extrusion = get_float_input("   Enter expected extrusion (default: 100mm): ", 
+    expected_extrusion = get_float_input("   Enter expected extrusion (default: 100mm): ",
                                         min_value=10, max_value=200, default=DEFAULT_EXTRUSION_LENGTH)
-    
-    measurement_length = expected_extrusion + 20
+
     print(f"\n{Fore.BLUE}Step 3/5:{Style.RESET_ALL} Prepare for measurement")
-    print(f"   📏 Measure {measurement_length:.0f}mm from filament inlet")
+    measurement_length = get_float_input(f"   Enter the marked length (mm): ",
+                                        min_value=expected_extrusion + 1, max_value=1000)
+    print(f"   📏 Mark {measurement_length:.0f}mm from filament inlet")
     print("   ✏️  Mark it with a pen or tape")
     print("   🔥 Heat your hotend to printing temperature")
     input("   Press Enter when ready...")
@@ -176,12 +177,13 @@ def calibrate_rotation_distance():
                                            min_value=MIN_ROTATION_DISTANCE, max_value=50)
     
     print(f"\n{Fore.BLUE}Step 2/4:{Style.RESET_ALL} Set extrusion amount")
-    expected_extrusion = get_float_input("   Enter expected extrusion (default: 100mm): ", 
+    expected_extrusion = get_float_input("   Enter expected extrusion (default: 100mm): ",
                                         min_value=10, max_value=200, default=DEFAULT_EXTRUSION_LENGTH)
-    
-    measurement_length = expected_extrusion + 20
+
     print(f"\n{Fore.BLUE}Step 3/4:{Style.RESET_ALL} Measure and extrude")
-    print(f"   📏 Measure {measurement_length:.0f}mm from filament inlet")
+    measurement_length = get_float_input(f"   Enter the marked length (mm): ",
+                                        min_value=expected_extrusion + 1, max_value=1000)
+    print(f"   📏 Mark {measurement_length:.0f}mm from filament inlet")
     print("   ✏️  Mark it with a pen or tape")
     print("   🔥 Heat your hotend to printing temperature")
     print(f"   🎯 Extrude exactly {expected_extrusion:.0f}mm using Klipper command:")
@@ -189,7 +191,7 @@ def calibrate_rotation_distance():
     leftover = get_float_input("   Enter leftover filament length (e.g., 22.58 mm): ", 
                               min_value=0, max_value=measurement_length, allow_zero=True)
     actual_extruded = measurement_length - leftover
-    new_rot_distance = old_rotation_distance * (expected_extrusion / actual_extruded)  # ✅ Correct formula
+    new_rot_distance = old_rotation_distance * (actual_extruded / expected_extrusion)  # ✅ Correct Klipper formula
 
     print(f"\n{Fore.BLUE}Step 4/4:{Style.RESET_ALL} Results & Next Steps")
     print(f"\n{Fore.GREEN}=== Calibration Results ==={Style.RESET_ALL}")
@@ -286,10 +288,10 @@ def calibrate_axis_rotation_distance():
     current_z = get_float_input(f"\n{Fore.CYAN}📍 In printer.cfg, find [stepper_z] section:{Style.RESET_ALL}\nEnter current rotation_distance for Z: ", 
                                min_value=MIN_ROTATION_DISTANCE, max_value=MAX_ROTATION_DISTANCE)
 
-    # ✅ Calculate new rotation distances using correct formula
-    new_x = current_x * (expected_x / measured_x)
-    new_y = current_y * (expected_y / measured_y)
-    new_z = current_z * (expected_z / measured_z)
+    # ✅ Calculate new rotation distances using correct Klipper formula
+    new_x = current_x * (measured_x / expected_x)
+    new_y = current_y * (measured_y / expected_y)
+    new_z = current_z * (measured_z / expected_z)
     
     print(f"\n{Fore.GREEN}=== New Rotation Distance Values (Corrected) ==={Style.RESET_ALL}\n")
     print(f"[stepper_x]\n{Fore.YELLOW}rotation_distance:{Style.RESET_ALL} {new_x:.4f}")
