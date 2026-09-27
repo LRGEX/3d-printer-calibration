@@ -13,11 +13,5 @@ wheels/
 dimcal_setup.json
 dimcal_history.json
 
-# Local agent/tool settings
-.claude/
-
-# Agent instructions (private)
-CLAUDE.md
-
 # Build logs
 build_log.txt
